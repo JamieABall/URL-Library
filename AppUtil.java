@@ -2,8 +2,8 @@
 Class: AppUtil.java
 Utility functions performed on application start up and during UI generation
 @Author: Jamison Ball
-@Date: November 17th, 2016
-@Last Updated: November 17th, 2016
+@Date Written: November 17th, 2016
+@Last Updated: November 18th, 2016
 ******************************************************************************************************************************/
 import java.io.File;
 import java.io.IOException;
@@ -53,12 +53,22 @@ public class AppUtil {
 			
 				if(url.contains("(") && url.contains(")")) {
 					WebLink link = URLHandler.generateWebLink(url.substring(0, url.indexOf("(")), url.substring(url.indexOf("(") + 1, url.indexOf(")")));
-					writer.write(link.toString() + '\n');
-					writer.close();
+					
+					if(URLHandler.WebLinkSupported(link)) {
+						writer.write(link.toString() + '\n');
+						writer.close();
+					} else {
+						writer.close();
+					}
 				} else {
 					WebLink default_link = URLHandler.generateWebLink(url);
-					writer.write(default_link.toString() + '\n');
-					writer.close();
+					
+					if(URLHandler.WebLinkSupported(default_link)) {
+						writer.write(default_link.toString() + '\n');
+						writer.close();
+					} else {
+						writer.close();
+					}
 				}
 			} catch(IOException e) {
 				File catch_file = new File("vid lib.txt");
