@@ -2,8 +2,8 @@
 Class: KeyboardEventManager
 Listens for specific commands from the keyboard and executes the corresponding event
 @Author: Jamison Ball
-@Date: November 17th, 2016
-@Last Updated: November 17th, 2016
+@Date Written: November 17th, 2016
+@Last Updated: November 18th, 2016
 **********************************************************************************************************************************/
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -38,17 +38,23 @@ public class KeyboardEventManager implements KeyListener {
 						if((siteData.contains("(")) && (siteData.contains(")"))) {
 							siteData = siteData.substring(0, siteData.lastIndexOf("("));
 							WebLink link = URLHandler.generateWebLink(siteData); //if I'm going to the site I don't care about the alias
-							URI siteLocation = new URI(link.getURL());
+							
+							if(!URLHandler.WebLinkSupported(link)) {
+								instance.setText("");
+								return;
+							} else {
+								URI siteLocation = new URI(link.getURL());
 								
-							if(Desktop.isDesktopSupported()) {
-								Object fatherComponent = instance.getParent();
+								if(Desktop.isDesktopSupported()) {
+									Object fatherComponent = instance.getParent();
 								
-								if(fatherComponent instanceof UserInputPanel) {
-									UserInputPanel fatherPanel = (UserInputPanel)fatherComponent;
-									fatherPanel.getMasterComponent().close();
+									if(fatherComponent instanceof UserInputPanel) {
+										UserInputPanel fatherPanel = (UserInputPanel)fatherComponent;
+										fatherPanel.getMasterComponent().close();
 									
+									}
+									Desktop.getDesktop().browse(siteLocation);
 								}
-								Desktop.getDesktop().browse(siteLocation);
 							}
 						   	
 						} else if(siteData.contains("(") && (!siteData.contains(")"))) {
@@ -57,16 +63,22 @@ public class KeyboardEventManager implements KeyListener {
 								instance.setForeground(Color.red);
 						} else {
 							WebLink default_link = URLHandler.generateWebLink(siteData);
-							URI default_site_location = new URI(default_link.getURL());
+							
+							if(!URLHandler.WebLinkSupported(default_link)) {
+								instance.setText("");
+								return;
+							} else {
+								URI default_site_location = new URI(default_link.getURL());
 								
-							if(Desktop.isDesktopSupported()) {
-								Object fatherComponent = instance.getParent();
+								if(Desktop.isDesktopSupported()) {
+									Object fatherComponent = instance.getParent();
 									
-								if(fatherComponent instanceof UserInputPanel) {
-									UserInputPanel fatherPanel = (UserInputPanel)fatherComponent;
-									fatherPanel.getMasterComponent().close();
+									if(fatherComponent instanceof UserInputPanel) {
+										UserInputPanel fatherPanel = (UserInputPanel)fatherComponent;
+										fatherPanel.getMasterComponent().close();
+									}
+									Desktop.getDesktop().browse(default_site_location);
 								}
-								Desktop.getDesktop().browse(default_site_location);
 							}
 						}						
 					
@@ -94,25 +106,32 @@ public class KeyboardEventManager implements KeyListener {
 													instance.getText().substring(instance.getText().indexOf("(") + 1,
 																				 instance.getText().indexOf(")")));
 							AppUtil.saveUrl(rootComponent);
-							rootComponent.incrementUrlCount();
-							rootComponent.getUrlStorage().ensureCapacity(rootComponent.getUrlCount());
-							rootComponent.getUrlStorage().add(saved_link);
 							
+							if(URLHandler.WebLinkSupported(saved_link)) {
+								rootComponent.incrementUrlCount();
+								rootComponent.getUrlStorage().ensureCapacity(rootComponent.getUrlCount());
+								rootComponent.getUrlStorage().add(saved_link);
+							}
 							WebLinkPanel link_panel = new WebLinkPanel(rootComponent, saved_link);
 							instance.setText("");
-							rootComponent.remove(rootComponent.getUserInputComponent());
-							ArrayList<WebLink> currentLinks = rootComponent.getUrlStorage();
-							ArrayList<WebLinkPanel> linkPanels = rootComponent.getUrlPanels();
 							
-							for(WebLinkPanel wlp: linkPanels) {
-								rootComponent.remove(wlp);
+							if(!link_panel.getLabel().getText().equals("UNSUPPORTED URL")) {
+								rootComponent.remove(rootComponent.getUserInputComponent());
+								ArrayList<WebLink> currentLinks = rootComponent.getUrlStorage();
+								ArrayList<WebLinkPanel> linkPanels = rootComponent.getUrlPanels();
+							
+								for(WebLinkPanel wlp: linkPanels) {
+									rootComponent.remove(wlp);
+								}
+								currentLinks.clear();
+								AppUtil.readUrls(rootComponent);
+								rootComponent.add(rootComponent.getUserInputComponent());
+								rootComponent.getUserInputComponent().getInputField().requestFocus();
+								AppUtil.generateWebLinkPanels(rootComponent);
+								rootComponent.pack();
+							} else {
+								return;
 							}
-							currentLinks.clear();
-							AppUtil.readUrls(rootComponent);
-							rootComponent.add(rootComponent.getUserInputComponent());
-							rootComponent.getUserInputComponent().getInputField().requestFocus();
-							AppUtil.generateWebLinkPanels(rootComponent);
-							rootComponent.pack();
 						} else if(instance.getText().contains("(") && !instance.getText().contains(")")) {
 							instance.setForeground(Color.red);
 						} else if(!instance.getText().contains("(") && instance.getText().contains(")")) {
@@ -120,25 +139,33 @@ public class KeyboardEventManager implements KeyListener {
 						} else {
 							WebLink default_saved_link = URLHandler.generateWebLink(instance.getText());
 							AppUtil.saveUrl(rootComponent);
-							rootComponent.incrementUrlCount();
-							rootComponent.getUrlStorage().ensureCapacity(rootComponent.getUrlCount());
-							rootComponent.getUrlStorage().add(default_saved_link);
+							
+							if(URLHandler.WebLinkSupported(default_saved_link)) {
+								rootComponent.incrementUrlCount();
+								rootComponent.getUrlStorage().ensureCapacity(rootComponent.getUrlCount());
+								rootComponent.getUrlStorage().add(default_saved_link);
+							}
 							
 							WebLinkPanel default_link_panel = new WebLinkPanel(rootComponent, default_saved_link);
 							instance.setText("");
-							rootComponent.remove(rootComponent.getUserInputComponent());
-							ArrayList<WebLinkPanel> linkPanels = rootComponent.getUrlPanels();
-							ArrayList<WebLink> currentLinks = rootComponent.getUrlStorage();
+							System.out.println(default_link_panel);
+							if(!default_link_panel.getLabel().getText().equals("UNSUPPORTED URL")) {
+								rootComponent.remove(rootComponent.getUserInputComponent());
+								ArrayList<WebLinkPanel> linkPanels = rootComponent.getUrlPanels();
+								ArrayList<WebLink> currentLinks = rootComponent.getUrlStorage();
 								
-							for(WebLinkPanel wlp: linkPanels) {
-								rootComponent.remove(wlp);
+								for(WebLinkPanel wlp: linkPanels) {
+									rootComponent.remove(wlp);
+								}
+								currentLinks.clear();
+								AppUtil.readUrls(rootComponent);
+								rootComponent.add(rootComponent.getUserInputComponent());
+								rootComponent.getUserInputComponent().getInputField().requestFocus();
+								AppUtil.generateWebLinkPanels(rootComponent);
+								rootComponent.pack();
+							} else {
+								return;
 							}
-							currentLinks.clear();
-							AppUtil.readUrls(rootComponent);
-							rootComponent.add(rootComponent.getUserInputComponent());
-							rootComponent.getUserInputComponent().getInputField().requestFocus();
-							AppUtil.generateWebLinkPanels(rootComponent);
-							rootComponent.pack();
 						}
 					}
 				}
