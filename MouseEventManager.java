@@ -2,7 +2,7 @@
 Class: MouseEventManager.java
 Listens for specific input from the mouse and executes the corresponding function
 @Author: Jamison Ball
-@Date: November 17th, 2016
+@Date Written: November 17th, 2016
 @Last Updated: November 17th, 2016
 ******************************************************************************************************************************/
 import java.awt.event.MouseListener;
