@@ -2,7 +2,7 @@
 Class: AppUI.java
 The base UI of the application.
 @Author: Jamison Ball
-@Date: November 17th, 2016
+@Date Written: November 17th, 2016
 @Last Updated: November 17th, 2016
 *****************************************************************************************************************************/
 import javax.swing.JFrame;
