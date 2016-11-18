@@ -2,8 +2,8 @@
 Class: URLHandler.java
 Generates WebLinks which are used by the application to browse and save URLs.
 @Author: Jamison Ball
-@Date: November 17th, 2016
-@Last Updated: November 17th, 2016
+@Date Written: November 17th, 2016
+@Last Updated: November 18th, 2016
 *****************************************************************************************************************************/
 import java.net.URL;
 import java.net.URLConnection;
@@ -25,6 +25,7 @@ public class URLHandler {
 			URL comURL = new URL(comString);
 			URLConnection comConnection = comURL.openConnection();
 			comConnection.connect();
+			comConnection.getInputStream().close();
 			com = true;
 		} catch(UnknownHostException e) {
 			try {
@@ -32,6 +33,7 @@ public class URLHandler {
 				URL netURL = new URL(netString);
 				URLConnection netConnection = netURL.openConnection();
 				netConnection.connect();
+				netConnection.getInputStream().close();
 				net = true;
 			} catch(UnknownHostException ex) {
 				try {
@@ -39,6 +41,7 @@ public class URLHandler {
 					URL orgURL = new URL(orgString);
 					URLConnection orgConnection = orgURL.openConnection();
 					orgConnection.connect();
+					orgConnection.getInputStream().close();
 					org = true;
 				} catch(UnknownHostException exx) {
 					try {
@@ -46,6 +49,7 @@ public class URLHandler {
 						URL tkURL = new URL(tkString);
 						URLConnection tkConnection = tkURL.openConnection();
 						tkConnection.connect();
+						tkConnection.getInputStream().close();
 						tk = true;
 					} catch(UnknownHostException exxx) {
 						inv = true;
@@ -127,6 +131,7 @@ public class URLHandler {
 					URL verifyWithEx = new URL(addr);
 					URLConnection addrConnection = verifyWithEx.openConnection();
 					addrConnection.connect();
+					addrConnection.getInputStream().close();
 					return addr.substring(addr.lastIndexOf("."));
 				} catch(UnknownHostException e) {
 					return ".inv";
