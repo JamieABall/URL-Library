@@ -2,8 +2,8 @@
 Class: WebLinkPanel.java
 Custom UI element for clickable URL panels
 @Author: Jamison Ball
-@Date: November 17th, 2016
-@Last Updated: November 17th, 2016
+@Date Written: November 17th, 2016
+@Last Updated: November 18th, 2016
 ***************************************************************************************************************/
 import javax.swing.JPanel;
 import javax.swing.JLabel;
