@@ -2,7 +2,7 @@
 Class: WebLink.java
 A wrapper class for URLs created for ease of use.
 @Author: Jamison Ball
-@Date: November 17th, 2016
+@Date Written: November 17th, 2016
 @Last Updated: November 17th, 2016
 ********************************************************************************************************************/
 import java.net.URL;
