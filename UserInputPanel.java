@@ -41,3 +41,4 @@ public class UserInputPanel extends JPanel {
 	public AppUI getMasterComponent() {
 		return master;
 	}
+}
